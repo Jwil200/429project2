@@ -2,8 +2,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-// We assume first ID read is host.
-
 public class Main {
 
     private static ServerHandler server;
@@ -16,15 +14,24 @@ public class Main {
         server.send(message, n.getAddress(), n.getPort());
     }
 
-    public static void update (int id1, int id2, String cost) {
-        if (cost.equals("inf")) update(id1, id2, -1);
-        else System.out.println("Unknown input for cost.");
-    }
-
+    // Required
     public static void update (int id1, int id2, int cost) {
-        // Need to implement.
+        // TO-DO
     }
 
+    // Required
+    public static void step () {
+        // TO-DO
+        // Manually call update.
+    }
+
+    // Required
+    public static void packets () {
+        // TO-DO
+        // Print packets and then reset value.
+    }
+
+    // Required
     public static void display () {
         if (nodeList.isEmpty())
 			System.out.println("No peers connected.");
@@ -37,18 +44,28 @@ public class Main {
 		}
     }
 
+    // Disable
+    public static void disable (int id) {
+        // TO-DO
+        Node n = Utils.getNode(nodeList, id);
+        n.stop();
+
+        // Check if it is a neighbor.
+    }
+
     public static void main (String[] args) {
         String fileName = "./";
-        try {
-            fileName += args[1]; // Assuming no issues.
-        }
-        catch (Exception e) { fileName += "topology.txt"; }
-
         int interval;
+        Utils.ArgsData a = null;
         try {
-            interval = Integer.parseInt(args[3]);
+            a = Utils.ArgsData.parseArgs(args);
+            fileName += a.fileName;
+            interval = a.interval;
         }
-        catch (Exception e) { interval = 1000; }
+        catch (Exception e) {
+            fileName += "topology.txt";
+            interval = 1000;
+        }
         
         File f = null;
         Scanner s = null;

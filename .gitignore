@@ -1,3 +1,5 @@
 # class files generated locally only
 *.class
-*.txt
+
+# Being used dev side only
+Tester.java

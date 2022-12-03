@@ -2,6 +2,7 @@ public class Node {
     private String address;
     private int id, port, cost; // Cost of -1 means INF.
     private Node next;
+    private boolean enabled;
 
     private Timer t;
     private boolean running;

@@ -17,4 +17,30 @@ public class Utils {
         }
         return null;
     }
+
+    // For packaging and parsing the multiple args.
+    public static class ArgsData {
+        public String fileName;
+        public int interval;
+
+        public static ArgsData parseArgs (String[] args) throws Exception {
+            ArgsData a = new ArgsData();
+
+            // Search for fileName and interval
+            for (int i = 0; i < args.length - 1; i++) {
+                switch (args[i]) {
+                    case "-t":
+                        a.fileName = args[i + 1];
+                        break;
+                    case "-i":
+                        a.interval = Integer.parseInt(args[i + 1]);
+                        break;
+                    default:
+                        // None
+                }
+            }
+
+            return a;
+        }
+    }
 }
