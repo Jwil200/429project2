@@ -45,6 +45,10 @@ public class Node {
         return address;
     }
 
+    public int getPort () {
+        return port;
+    }
+
     public String toString () {
         return "ID: " + id + " IP: " + address + " PORT: " + port + " COST: " + cost;
     }  

@@ -10,6 +10,8 @@ public class ServerHandler extends Thread {
     public ServerHandler (int PORT) throws Exception {
         socket = new DatagramSocket(PORT);
         running = true;
+
+        this.start();
     }
 
     public void run () {
@@ -23,6 +25,7 @@ public class ServerHandler extends Thread {
                 InetAddress address = p.getAddress();
                 int port = p.getPort();
                 p = new DatagramPacket(buffer, buffer.length, address, port);
+                System.out.println();
                 String recieved = new String(p.getData(), 0, p.getLength());
 
                 switch (recieved) {
@@ -30,11 +33,20 @@ public class ServerHandler extends Thread {
                         
                         break;
                     default:
-                        // Nothing
+                        System.out.println(recieved);
                 }
             }
             catch (Exception e) {}
         }
+    }
+
+    public void send (String msg, String address, int port) {
+        byte[] buffer = msg.getBytes();
+        try {
+            DatagramPacket p = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(address), port);
+            socket.send(p);
+        }
+        catch (Exception e) { System.out.println("Issue sending message."); }
     }
 
     public void close () {

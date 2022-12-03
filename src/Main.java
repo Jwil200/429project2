@@ -6,15 +6,20 @@ import java.util.Scanner;
 
 public class Main {
 
+    private static ServerHandler server;
     private static Node primary; // We determine primary based on edges defined (assuming first is the ID of this computer)
     private static ArrayList<Node> nodeList;
     private static int numServers;
+
+    public static void sendMessage (int id, String message) {
+        Node n = Utils.getNode(nodeList, id);
+        server.send(message, n.getAddress(), n.getPort());
+    }
 
     public static void update (int id1, int id2, String cost) {
         if (cost.equals("inf")) update(id1, id2, -1);
         else System.out.println("Unknown input for cost.");
     }
-
 
     public static void update (int id1, int id2, int cost) {
         // Need to implement.
@@ -33,7 +38,7 @@ public class Main {
     }
 
     public static void main (String[] args) {
-        String fileName = "./src/";
+        String fileName = "./";
         try {
             fileName += args[1]; // Assuming no issues.
         }
@@ -84,6 +89,11 @@ public class Main {
             if (n.getID() == primary.getID()) continue;
             n.start(interval);
         }
+
+        try {
+            server = new ServerHandler(primary.getPort());
+        }
+        catch (Exception e) { System.exit(0); }
         
         s = new Scanner(System.in);
 
@@ -92,11 +102,15 @@ public class Main {
         while (!input.equals("crash")) {
             System.out.print("> ");
             input = s.nextLine();
-            switch (input) {
+            switch (input.split(" ")[0]) {
                 case "display":
                     display();
                     break;
                 case "crash":
+                    break;
+                case "send":
+                    args = input.split(" ");
+                    sendMessage(Integer.parseInt(args[1]), args[2]);
                     break;
                 default:
                     System.err.println("Invalid input.");
