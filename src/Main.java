@@ -44,13 +44,18 @@ public class Main {
 		}
     }
 
-    // Disable
+    // Required
     public static void disable (int id) {
         // TO-DO
         Node n = Utils.getNode(nodeList, id);
         n.stop();
 
         // Check if it is a neighbor.
+    }
+
+    // Required
+    public static void crash () {
+        // TO-DO
     }
 
     public static void main (String[] args) {
@@ -119,14 +124,27 @@ public class Main {
         while (!input.equals("crash")) {
             System.out.print("> ");
             input = s.nextLine();
-            switch (input.split(" ")[0]) {
+            args = input.split(" ");
+            switch (args[0]) {
+                case "update":
+                    update(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    break;
+                case "step":
+                    step();
+                    break;
+                case "packets":
+                    packets();
+                    break;
                 case "display":
                     display();
                     break;
+                case "disable":
+                    disable(Integer.parseInt(args[1]));
+                    break;
                 case "crash":
+                    crash();
                     break;
                 case "send":
-                    args = input.split(" ");
                     sendMessage(Integer.parseInt(args[1]), args[2]);
                     break;
                 default:
