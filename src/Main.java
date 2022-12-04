@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
+    
+    public static final int MESSAGE_LENGTH = 256;
 
     private static ServerHandler server;
     private static Node primary; // We determine primary based on edges defined (assuming first is the ID of this computer)
@@ -62,7 +64,7 @@ public class Main {
     }
 
     public static void main (String[] args) {
-        String fileName = "./";
+        String fileName = "../topology/";
         int interval = 1000;
         Utils.ArgsData a = null;
         try {

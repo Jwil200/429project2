@@ -1,4 +1,5 @@
 # class files generated locally only
+bin
 *.class
 
 # Being used dev side only
