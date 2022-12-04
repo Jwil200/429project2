@@ -60,7 +60,6 @@ public class Utils {
                 primary = n;
                 continue;
             }
-            //message += n.getAddress() + n.getPort() + "0x0" + n.getID() + routingTable.get(n);
             appendToArray(message, ipToBytes(n.getAddress()), start, 4);            // IP
             appendToArray(message, intToBytes(n.getPort()), start + 4, 2);          // Port
             appendToArray(message, new byte[2], start + 6, 2);                      // Blank
@@ -68,8 +67,9 @@ public class Utils {
             appendToArray(message, intToBytes(routingTable.get(n)), start + 10, 2); // Cost
             i++;
         }
-        //return (routingTable.size() - 1) + primary.getPort() + primary.getAddress() + message;
         appendToArray(message, intToBytes(routingTable.size() - 1), 0, 2);
+        appendToArray(message, intToBytes(primary.getPort()), 2, 2);
+        appendToArray(message, ipToBytes(primary.getAddress()), 4, 4);
         return message;
     }
 

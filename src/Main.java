@@ -42,9 +42,11 @@ public class Main {
 			System.out.println("No peers connected.");
 		else {
 			System.out.printf("%-12s%-10s%-6s%n", "Source ID", "Next ID", "Cost");
-            for (Node n: nodeList) {
-                if (n.getID() == primary.getID()) continue;
-                System.out.printf("%-12d%-10d%-6s%n", n.getNext().getID(), n.getID(), (n.getCost() == -1 ? "inf" : n.getCost()));
+            for (Node n: routingTable.keySet()) {
+                Node next = n.getNext();
+                String nextID = "-";
+                if (next != null) nextID = "" + next.getID();
+                System.out.printf("%-12d%-10s%-6s%n", n.getID(), nextID, (routingTable.get(n) == -1 ? "inf" : routingTable.get(n)));
             }
 		}
     }
@@ -61,6 +63,9 @@ public class Main {
     // Required
     public static void crash () {
         // TO-DO
+        for (Node n: nodeList)
+            n.stop();
+        server.close();
     }
 
     public static void main (String[] args) {
@@ -86,6 +91,7 @@ public class Main {
         catch (Exception e) { e.printStackTrace(); }
 
         nodeList = new ArrayList<Node>();
+        routingTable = new HashMap<Node, Integer>();
 
         numServers = s.nextInt();
         s.nextLine();
@@ -93,7 +99,9 @@ public class Main {
         s.nextLine();
         for (int i = 0; i < numServers; i++) {
             String[] l = s.nextLine().split(" ");
-            nodeList.add(new Node(Integer.parseInt(l[0]), l[1], Integer.parseInt(l[2])));
+            Node newNode = new Node(Integer.parseInt(l[0]), l[1], Integer.parseInt(l[2]));
+            nodeList.add(newNode);
+            routingTable.put(newNode, -1);
         }
         for (int i = 0; i < numEdges; i++) {
             String[] l = s.nextLine().split(" ");
@@ -101,9 +109,11 @@ public class Main {
                 primary = Utils.getNode(nodeList, Integer.parseInt(l[0]));
             }
             Node n = Utils.getNode(nodeList, Integer.parseInt(l[1]));
-            n.setCost(Integer.parseInt(l[2]));
-            n.setNext(primary);
+            routingTable.put(n, Integer.parseInt(l[2]));
+            n.setNext(n); // If node is a neighbor then its next hop starts as itself.
         }
+
+        routingTable.put(primary, 0); // Node repesenting this machine should be 0.
 
         if (!Utils.ip().equals(primary.getAddress())) {
             System.err.println("IP Mismatch. Check your topology file.\nGiven Address: " + primary.getAddress() + "\nExpected Address: " + Utils.ip());

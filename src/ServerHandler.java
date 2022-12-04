@@ -27,11 +27,14 @@ public class ServerHandler extends Thread {
                 InetAddress address = p.getAddress();
                 int port = p.getPort();
                 p = new DatagramPacket(buffer, buffer.length, address, port);
+                System.out.println(address + " " + port);
                 System.out.println();
                 String recieved = new String(p.getData(), 0, p.getLength());
 
                 switch (recieved) {
                     case "update": // Recieved an update from a node.
+
+                        /* 
                         Node n = null; // Get Node somehow. We know its a neighbor. Node that is trying to update.
                         HashMap<Integer, Integer> nodeCost = null; // Somehow get this from the message (Node ID, Cost)
                         ArrayList<Node> nodeList = null; // Need to get this from main.
@@ -40,6 +43,8 @@ public class ServerHandler extends Thread {
                             if (n2.getCost() > (n.getCost() + nodeCost.get(id)))
                                 n2.setCost(n.getCost() + nodeCost.get(id));
                         }
+                        */
+
                         break;
                     default:
                         System.out.println(recieved);

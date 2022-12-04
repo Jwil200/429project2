@@ -1,6 +1,6 @@
 public class Node {
     private String address;
-    private int id, port, cost; // Cost of -1 means INF.
+    private int id, port; // Cost of -1 means INF.
     private Node next;
     private boolean enabled;
 
@@ -9,25 +9,16 @@ public class Node {
     private int time;
 
     public Node (int id, String address, int port) {
-        this(id, address, port, -1, null);
+        this(id, address, port, null);
     }
 
-    public Node (int id, String address, int port, int cost, Node next) {
+    public Node (int id, String address, int port, Node next) {
         this.id = id;
         this.address = address;
         this.port = port;
-        this.cost = cost;
         this.next = next;
 
         running = false;
-    }
-
-    public void setCost (int cost) {
-        this.cost = cost;
-    }
-
-    public int getCost () {
-        return cost;
     }
 
     public int getID () {
@@ -51,7 +42,7 @@ public class Node {
     }
 
     public String toString () {
-        return "ID: " + id + " IP: " + address + " PORT: " + port + " COST: " + cost;
+        return "ID: " + id + " IP: " + address + " PORT: " + port;
     }  
 
     // Update Manager
