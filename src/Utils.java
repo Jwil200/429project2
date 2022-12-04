@@ -91,6 +91,12 @@ public class Utils {
         return message;
     }
 
+    public static HashMap<Node, Integer> decodeTable (byte[] message) {
+        HashMap<Node, Integer> table = new HashMap<Node, Integer>();
+        Main.getNodeList();
+        return null;
+    }
+
     /**
      * Args data class that looks at the arguments for the filename 
      */
@@ -100,6 +106,7 @@ public class Utils {
 
         public static ArgsData parseArgs (String[] args) throws Exception {
             ArgsData a = new ArgsData();
+            if (args.length == 0) throw new Exception();
 
             // Search for fileName and interval
             for (int i = 0; i < args.length - 1; i++) {

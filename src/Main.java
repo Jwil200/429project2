@@ -18,6 +18,10 @@ public class Main {
         server.send(message, n.getAddress(), n.getPort());
     }
 
+    public static ArrayList<Node> getNodeList () {
+        return nodeList;
+    }
+
     // Required
     public static void update (int id1, int id2, int cost) {
         // TO-DO
