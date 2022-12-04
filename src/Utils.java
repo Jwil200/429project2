@@ -1,6 +1,7 @@
 import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.net.Socket;
 /**
  * 
  * Public Class of all the utilities that the other functions will call to get socket information
