@@ -22,6 +22,10 @@ public class Main {
         return nodeList;
     }
 
+    public static HashMap<Node, Integer> getRoutingTable () {
+        return routingTable;
+    }
+
     // Required
     public static void update (int id1, int id2, int cost) {
         // TO-DO
@@ -172,5 +176,6 @@ public class Main {
         }
         
         s.close();
+        System.exit(0);
     }
 }

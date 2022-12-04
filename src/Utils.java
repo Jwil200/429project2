@@ -1,6 +1,7 @@
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -53,6 +54,14 @@ public class Utils {
         catch (Exception e) { return new byte[4]; }
     }
 
+    public static String bytesToIP (byte[] bytes) {
+        String address = "";
+        for (byte b : bytes) {
+            address += (b & 0xFF) + ".";
+        }
+        return address.substring(0, address.length() - 1);
+    }
+
     // Reading / making messages
 
     public static byte[] appendToArray (byte[] target, byte[] arr, int start, int numAppend) {
@@ -94,7 +103,17 @@ public class Utils {
     public static HashMap<Node, Integer> decodeTable (byte[] message) {
         HashMap<Node, Integer> table = new HashMap<Node, Integer>();
         Main.getNodeList();
-        return null;
+        int numNodes = bytesToInt(Arrays.copyOfRange(message, 0, 2));
+        int sourcePort = bytesToInt(Arrays.copyOfRange(message, 0, 2)); // Necessary?
+        String sourceIP = bytesToIP(Arrays.copyOfRange(message, 4, 8));
+        for (int i = 0; i < numNodes; i++) {
+            int start = 8 + 12 * i;
+            int nodeID = bytesToInt(Arrays.copyOfRange(message, start + 8, start + 10));
+            Node n = Utils.getNode(Main.getNodeList(), nodeID);
+            int nodeCost = bytesToInt(Arrays.copyOfRange(message, start + 10, start + 12));
+            table.put(n, nodeCost);
+        }
+        return table;
     }
 
     /**
@@ -123,6 +142,13 @@ public class Utils {
             }
 
             return a;
+        }
+    }
+
+    // For Testing
+    public static void printMap (HashMap<Node, Integer> map) {
+        for (Node n: map.keySet()) {
+            System.out.println(n.getID() + " " + n.getNext() + " " + map.get(n));
         }
     }
 }

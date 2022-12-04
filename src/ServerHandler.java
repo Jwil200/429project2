@@ -31,26 +31,33 @@ public class ServerHandler extends Thread {
                 System.out.println();
                 String recieved = new String(p.getData(), 0, p.getLength());
 
-                switch (recieved) {
-                    case "update": // Recieved an update from a node.
-
-                        /* 
-                        Node n = null; // Get Node somehow. We know its a neighbor. Node that is trying to update.
-                        HashMap<Integer, Integer> nodeCost = null; // Somehow get this from the message (Node ID, Cost)
-                        ArrayList<Node> nodeList = null; // Need to get this from main.
-                        for (Integer id: nodeCost.keySet()) {
-                            Node n2 = Utils.getNode(nodeList, id);
-                            if (n2.getCost() > (n.getCost() + nodeCost.get(id)))
-                                n2.setCost(n.getCost() + nodeCost.get(id));
-                        }
-                        */
-
-                        break;
-                    default:
-                        System.out.println(recieved);
+                HashMap<Node, Integer> map = null;
+                try {
+                    map = Utils.decodeTable(p.getData()); // I wish tuples were real
                 }
+                catch (Exception e) { continue; }
+
+                Utils.printMap(map);
+
+                /* 
+                HashMap<Node, Integer> routingTable = Main.getRoutingTable();
+                Node sourceNode = null;
+                for (Node n: routingTable.keySet()) { // We find the source by finding where it isn't.
+                    if (!map.containsKey(n)) {
+                        sourceNode = n;
+                        break;
+                    }
+                }
+                for (Node n: map.keySet()) {
+                    if (routingTable.get(n) > map.get(n) + routingTable.get(sourceNode)) {
+                        routingTable.put(n, map.get(n) + routingTable.get(sourceNode));
+                    }
+                }
+                */
+
+                
             }
-            catch (Exception e) {}
+            catch (Exception e) {}                  
         }
     }
 

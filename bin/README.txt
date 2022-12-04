@@ -1,0 +1,1 @@
+This folder is used as a directory to store .class files when compiling. If nothing is here compile the program before running.
