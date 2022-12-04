@@ -13,7 +13,9 @@ public class Utils {
      */
     public static String ip () {
 		try {
-			return Inet4Address.getLocalHost().getHostAddress();
+			//return Inet4Address.getLocalHost().getHostAddress();
+			Socket temp = new Socket("192.168.1.1", 80);
+            		return temp.getLocalAddress().getHostAddress();   
 		}
 		catch (Exception e) {
 			return "127.0.0.0"; // On a failure to get post local host.
