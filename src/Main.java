@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
@@ -7,6 +8,7 @@ public class Main {
     private static ServerHandler server;
     private static Node primary; // We determine primary based on edges defined (assuming first is the ID of this computer)
     private static ArrayList<Node> nodeList;
+    private static HashMap<Node, Integer> routingTable;
     private static int numServers;
 
     public static void sendMessage (int id, String message) {
@@ -17,6 +19,7 @@ public class Main {
     // Required
     public static void update (int id1, int id2, int cost) {
         // TO-DO
+        // Use step to send out update
     }
 
     // Required
@@ -60,16 +63,16 @@ public class Main {
 
     public static void main (String[] args) {
         String fileName = "./";
-        int interval;
+        int interval = 1000;
         Utils.ArgsData a = null;
         try {
             a = Utils.ArgsData.parseArgs(args);
             fileName += a.fileName;
-            interval = a.interval;
+            interval *= a.interval;
         }
         catch (Exception e) {
             fileName += "topology.txt";
-            interval = 1000;
+            interval *= 120; // 2 min
         }
         
         File f = null;

@@ -1,9 +1,9 @@
-public class Timer extends Thread {
+public class AwaitTimer extends Thread {
     private boolean running;
     private Node c;
     private int time;
 
-    public Timer (Node c, int time) {
+    public AwaitTimer (Node c, int time) {
         this.c = c;
         this.time = time * 3;
         running = true;

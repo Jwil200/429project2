@@ -4,7 +4,7 @@ public class Node {
     private Node next;
     private boolean enabled;
 
-    private Timer t;
+    private AwaitTimer t;
     private boolean running;
     private int time;
 
@@ -64,12 +64,12 @@ public class Node {
         if (running) return;
         running = true;
         this.time = time;
-        t = new Timer(this, time);
+        t = new AwaitTimer(this, time);
     }
 
     public void restart () {
         if (!running) return;
         t.close(); // Close and make a new one.
-        t = new Timer(this, time);
+        t = new AwaitTimer(this, time);
     }
 }
