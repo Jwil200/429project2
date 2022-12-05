@@ -34,7 +34,7 @@ public class AwaitTimer extends Thread {
         if (running) {
             c.stop();
             //c.setCost(-1); Should set cost to -1 (inf) here
-            Distance_Vector_Routing.getRoutingTable().put(c, -1);
+            distance_vector_routing.getRoutingTable().put(c, -1);
         }
     }
     /**

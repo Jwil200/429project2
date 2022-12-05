@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
  * Update, Step, Packets, Display, Disable, and Crash. 
  * This class also prompts the user for input to call for the functions. 
  */
-public class Distance_Vector_Routing {
+public class distance_vector_routing {
     
     public static final int MESSAGE_LENGTH = 256;
 
