@@ -5,7 +5,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
+/** 
+ * main class that calls for all the required functions of the project 
+ * Update, Step, Packets, Display, Disable, and Crash. 
+ * This class also prompts the user for input to call for the functions. 
+ */
 public class Main {
     
     public static final int MESSAGE_LENGTH = 256;
@@ -34,6 +40,13 @@ public class Main {
         return primary;
     }
 
+    public static void help() {
+			System.out.println("\nList of Commands supported:" + "\n>> help"
+						+ "\n-- update <server id 1> <server id 2> <link cost>" + "\n-- step" + "\n-- packets"
+						+ "\n-- display" + "\n-- disable <server id>" + "\n-- crash" + "\n-- exit\n");
+
+    }
+    
     // Required
     public static void update (int id1, int id2, int cost) {
         // Use step to send out update
@@ -100,7 +113,10 @@ public class Main {
         System.out.println("PACKETS SUCCESS");
     }
 
-    // Required
+    /**
+     * Displays the nodes that are connected to the localhost if there is any
+     * @system.out.print to print out the route table for the user to see 
+     */
     public static void display () {
         List<Node> sortedKeys = new ArrayList<>(routingTable.keySet());
         Collections.sort(sortedKeys, Comparator.comparing(Node::getID));
@@ -119,7 +135,11 @@ public class Main {
         System.out.println("DISPLAY SUCCESS");
     }
 
-    // Required
+    /**
+     * disables the node from the route table to make sure the packets do not go to that node
+     * @param id takes the id that needs to be disabled from the route table
+     */
+
     public static void disable (int id) {
         Node n = Utils.getNode(nodeList, id);
         if (n == null) {
@@ -131,7 +151,10 @@ public class Main {
         System.out.println("DISABLE SUCCESS");
     }
 
-    // Required
+    /**
+     * kills the program on the localhost and removes the node from the other neighbors 
+     * essentially disconnecting the node from the rest of the environment.
+     */
     public static void crash () {
         // TO-DO
         for (Node n: nodeList)
@@ -141,44 +164,69 @@ public class Main {
         System.out.println("CRASH SUCCESS");
     }
 
+    /**
+     * main class that calls for the filename that is used as the reference for the topology 
+     * scans the topology.txt file for the nodes list and inputs it into an array
+     * parses for the server's information and the number of edges that is associated to the nodes
+     * LocalHost node will be referenced as node 0 and the following nodes that connect will start at 1 
+     * Builds the connectivity with the other nodes and formulates the route table and the cost associated 
+     * 
+     * @case relays the user input for the respective function above. 
+     * @s.close to close the session 
+     */
     public static void main (String[] args) {
         packets = 0;
-        String fileName = "../topology/";
-        int interval = 1000;
+        
+        String fileName=null;
+        int interval=0;
+        int j = 0;
+        Scanner s = new Scanner(System.in);
+
+        System.out.println("ENTER THE FOLLOWING COMMAND TO START\nserver -t topology_file -i seconds");
+        System.out.print("> ");
+        String start = s.nextLine();
+        StringTokenizer st = new StringTokenizer(start);
+
         Utils.ArgsData a = null;
+        String[] arg = new String[5];
+        while(st.hasMoreTokens()){
+            arg[j] = st.nextToken();
+            j++;
+        }
         try {
-            a = Utils.ArgsData.parseArgs(args);
-            fileName += a.fileName;
-            interval *= a.interval;
+            a = Utils.ArgsData.parseArgs(arg);
+            fileName = a.fileName;
+            interval = a.interval;
         }
         catch (Exception e) {
-            fileName += "topology.txt";
-            interval *= 120; // 2 min
+            fileName = "topology.txt";
+            interval = 120; // 2 min
         }
+        interval *= 1000;
         
         File f = null;
-        Scanner s = null;
+        Scanner txt = null;
         try {
             f = new File(fileName);
-            s = new Scanner(f);
+            txt = new Scanner(f);
         }
         catch (Exception e) { e.printStackTrace(); }
 
         nodeList = new ArrayList<Node>();
         routingTable = new HashMap<Node, Integer>();
 
-        numServers = s.nextInt();
-        s.nextLine();
-        int numEdges = s.nextInt();
-        s.nextLine();
+        numServers = txt.nextInt();
+        txt.nextLine();
+        int numEdges = txt.nextInt();
+        txt.nextLine();
         for (int i = 0; i < numServers; i++) {
-            String[] l = s.nextLine().split(" ");
+            String[] l = txt.nextLine().split(" ");
             Node newNode = new Node(Integer.parseInt(l[0]), l[1], Integer.parseInt(l[2]));
             nodeList.add(newNode);
             routingTable.put(newNode, -1);
         }
         for (int i = 0; i < numEdges; i++) {
-            String[] l = s.nextLine().split(" ");
+            String[] l = txt.nextLine().split(" ");
             if (i == 0) { // Check the first edge and set the primary to the first ID in the edge.
                 primary = Utils.getNode(nodeList, Integer.parseInt(l[0]));
                 primary.setNext(primary);
@@ -195,7 +243,7 @@ public class Main {
             System.exit(0);
         }
 
-        s.close();
+        txt.close();
 
         for (Node n: nodeList) {
             if (n.getID() == primary.getID()) continue;
@@ -207,15 +255,20 @@ public class Main {
         }
         catch (Exception e) { System.exit(0); }
         
-        s = new Scanner(System.in);
+        //s = new Scanner(System.in);
+
+        System.out.println("USE HELP FOR COMMAND INFORMATION");
 
         String input = "";
-
+        
         while (!input.equals("crash")) {
-            System.out.print("> ");
+            System.out.print(">>> ");
             input = s.nextLine();
             args = input.split(" ");
             switch (args[0]) {
+                case "help":
+                    help();
+                    break;
                 case "update":
                     update(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
                     break;

@@ -31,7 +31,7 @@ public class UpdateTimer extends Thread {
             }
             if (running) {
                 Main.step();
-                System.out.print("\nPeriodic updates sent.\n> ");
+                System.out.print("Periodic updates sent.\n>>> ");
                 elapse = 0;
             }
         }

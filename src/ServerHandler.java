@@ -60,7 +60,7 @@ public class ServerHandler extends Thread {
                     } 
                 }
                 if (!sourceNode.getEnabled()) continue; // Ignore anything from a disabled server
-                System.out.print("\nRECEIVED A MESSAGE FROM SERVER " + sourceNode.getID() + "\n> ");
+                System.out.print("\nRECEIVED A MESSAGE FROM SERVER " + sourceNode.getID() + "\n>>> ");
                 sourceNode.restart();
                 Main.incrementPackets();
 

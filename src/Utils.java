@@ -1,9 +1,10 @@
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
+import java.net.Socket;
 /**
  * 
  * Public Class of all the utilities that the other functions will call to get socket information
@@ -16,7 +17,11 @@ public class Utils {
      */
     public static String ip () {
 		try {
-			return Inet4Address.getLocalHost().getHostAddress();
+			//return Inet4Address.getLocalHost().getHostAddress();
+			Socket temp = new Socket("192.168.1.1", 80);
+            String address = temp.getLocalAddress().getHostAddress();
+            temp.close();
+            return address;   
 		}
 		catch (Exception e) {
 			return "127.0.0.0"; // On a failure to get post local host.
