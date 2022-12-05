@@ -3,19 +3,32 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
-
+/** 
+* public class to handle the server connection between the localhost and the remote host
+* this controls the connection of the sockets for each host 
+*/
 public class ServerHandler extends Thread {
 
     private DatagramSocket socket;
     private boolean running;
-
+    /** 
+     * checks the port allocation for the socket of the host connections
+     * sets the session to running because the socket is defined
+     * @param port the port allocation for the host device
+     */
     public ServerHandler (int PORT) throws Exception {
         socket = new DatagramSocket(PORT);
         running = true;
 
         this.start();
     }
-
+    /**
+     * establishes the socket with the ip address and port number associated to the host device
+     * associates the connected devices to the route table with the cost of the route
+     * increments the packets that are received from the remote host 
+     * checks the route table for the cost to get from one host to the other
+     * and also finds if there are nodes that have become unreachable 
+     */
     public void run () {
         byte[] buffer = new byte[256];
 
@@ -31,7 +44,7 @@ public class ServerHandler extends Thread {
 
                 HashMap<Node, Integer> map = null;
                 try {
-                    map = Utils.decodeTable(p.getData()); // I wish tuples were real
+                    map = Utils.decodeTable(p.getData()); 
                 }
                 catch (Exception e) { continue; }
 
@@ -78,7 +91,9 @@ public class ServerHandler extends Thread {
             catch (Exception e) {}                  
         }
     }
-
+    /** 
+     * sends the necessary packets from one host using the ip address and ports associated to the other host 
+     */
     public void send (byte[] msg, String address, int port) {
         try {
             DatagramPacket p = new DatagramPacket(msg, msg.length, InetAddress.getByName(address), port);
@@ -86,7 +101,9 @@ public class ServerHandler extends Thread {
         }
         catch (Exception e) { System.out.println("Issue sending message."); }
     }
-
+    /**
+     * closes the session 
+     */
     public void close () {
         running = false;
     }
