@@ -1,6 +1,9 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -99,11 +102,13 @@ public class Main {
 
     // Required
     public static void display () {
-        if (nodeList.isEmpty())
-			System.out.println("No peers connected.");
-		else {
-			System.out.printf("%-12s%-10s%-6s%n", "Source ID", "Next ID", "Cost");
-            for (Node n: routingTable.keySet()) {
+        List<Node> sortedKeys = new ArrayList<>(routingTable.keySet());
+        Collections.sort(sortedKeys, Comparator.comparing(Node::getID));
+        if(nodeList.isEmpty()){
+            System.out.println("No peers Connected.");
+        }else{
+            System.out.printf("%-12s%-10s%-6s%n", "Source ID", "Next ID", "Cost");
+            for(Node n: sortedKeys){
                 Node next = n.getNext();
                 String nextID = "-";
                 if (next != null) nextID = "" + next.getID();
