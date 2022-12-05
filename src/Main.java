@@ -85,17 +85,19 @@ public class Main {
 
     // Required
     public static void display () {
-        if (nodeList.isEmpty())
-			System.out.println("No peers connected.");
-		else {
-			System.out.printf("%-12s%-10s%-6s%n", "Source ID", "Next ID", "Cost");
-            for (Node n: routingTable.keySet()) {
+        List<Node> sortedKeys = new ArrayList<>(routingTable.keySet());
+        Collections.sort(sortedKeys, Comparator.comparing(Node::getID));
+        if(nodeList.isEmpty()){
+            System.out.println("No peers Connected.");
+        }else{
+            System.out.printf("%-12s%-10s%-6s%n", "Source ID", "Next ID", "Cost");
+            for(Node n: sortedKeys){
                 Node next = n.getNext();
                 String nextID = "-";
                 if (next != null) nextID = "" + next.getID();
                 System.out.printf("%-12d%-10s%-6s%n", n.getID(), nextID, (routingTable.get(n) == -1 ? "inf" : routingTable.get(n)));
-            }
-		}
+        }
+        }
     }
 
     // Required
