@@ -30,7 +30,7 @@ public class UpdateTimer extends Thread {
                 } catch (Exception e) {}
             }
             if (running) {
-                Main.step();
+                Distance_Vector_Routing.step();
                 System.out.print("Periodic updates sent.\n>>> ");
                 elapse = 0;
             }

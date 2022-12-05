@@ -51,7 +51,7 @@ public class ServerHandler extends Thread {
                 catch (Exception e) { continue; }
 
                 // This handles updating the table based on the recieved routing table.
-                HashMap<Node, Integer> routingTable = Main.getRoutingTable();
+                HashMap<Node, Integer> routingTable = Distance_Vector_Routing.getRoutingTable();
                 Node sourceNode = null;
                 for (Node n: map.keySet()) { // The source is the node with cost 0.
                     if (map.get(n) == 0) {
@@ -62,12 +62,12 @@ public class ServerHandler extends Thread {
                 if (!sourceNode.getEnabled()) continue; // Ignore anything from a disabled server
                 System.out.print("\nRECEIVED A MESSAGE FROM SERVER " + sourceNode.getID() + "\n>>> ");
                 sourceNode.restart();
-                Main.incrementPackets();
+                Distance_Vector_Routing.incrementPackets();
 
                 int sourceCost = routingTable.get(sourceNode); // Check if matching
                 
                 for (Node n: map.keySet()) {
-                    if (Main.getPrimary().getID() == n.getID()) {
+                    if (Distance_Vector_Routing.getPrimary().getID() == n.getID()) {
                         if (map.get(n) != sourceCost) {
                             sourceCost = map.get(n);
                             routingTable.put(sourceNode, sourceCost);
