@@ -82,7 +82,7 @@ public class Utils {
     public static byte[] encodeTable (HashMap<Node, Integer> routingTable) {
         // Primary node has cost 0.
         Node primary = null;
-        byte[] message = new byte[Main.MESSAGE_LENGTH];
+        byte[] message = new byte[distance_vector_routing.MESSAGE_LENGTH];
         int i = 0;
         for (Node n: routingTable.keySet()) {
             int start = 8 + 12 * i;
@@ -104,14 +104,14 @@ public class Utils {
 
     public static HashMap<Node, Integer> decodeTable (byte[] message) {
         HashMap<Node, Integer> table = new HashMap<Node, Integer>();
-        Main.getNodeList();
+        distance_vector_routing.getNodeList();
         int numNodes = bytesToInt(Arrays.copyOfRange(message, 0, 2));
         //int sourcePort = bytesToInt(Arrays.copyOfRange(message, 0, 2));
         //String sourceIP = bytesToIP(Arrays.copyOfRange(message, 4, 8));
         for (int i = 0; i < numNodes; i++) {
             int start = 8 + 12 * i;
             int nodeID = bytesToInt(Arrays.copyOfRange(message, start + 8, start + 10));
-            Node n = Utils.getNode(Main.getNodeList(), nodeID);
+            Node n = Utils.getNode(distance_vector_routing.getNodeList(), nodeID);
             int nodeCost = bytesToInt(Arrays.copyOfRange(message, start + 10, start + 12));
             table.put(n, (nodeCost == 65535 ? -1 : nodeCost));
         }
