@@ -1,17 +1,18 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServerHandler extends Thread {
 
     private DatagramSocket socket;
     private boolean running;
+    private UpdateTimer update;
 
-    public ServerHandler (int PORT) throws Exception {
+    public ServerHandler (int PORT, int interval) throws Exception {
         socket = new DatagramSocket(PORT);
         running = true;
+        update = new UpdateTimer(interval);
 
         this.start();
     }
@@ -44,8 +45,8 @@ public class ServerHandler extends Thread {
                         break;
                     } 
                 }
+                if (!sourceNode.getEnabled()) continue; // Ignore anything from a disabled server
                 System.out.print("\nRECEIVED A MESSAGE FROM SERVER " + sourceNode.getID() + "\n> ");
-                if (!sourceNode.getEnabled()) continue;
                 sourceNode.restart();
                 Main.incrementPackets();
 
@@ -55,7 +56,8 @@ public class ServerHandler extends Thread {
                     if (Main.getPrimary().getID() == n.getID()) {
                         if (map.get(n) != sourceCost) {
                             sourceCost = map.get(n);
-                            routingTable.put(n, sourceCost);
+                            routingTable.put(sourceNode, sourceCost);
+                            break;
                         }
                     }
                 }
@@ -89,5 +91,6 @@ public class ServerHandler extends Thread {
 
     public void close () {
         running = false;
+        update.close();
     }
 }

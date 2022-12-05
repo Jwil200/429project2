@@ -33,7 +33,6 @@ public class Main {
 
     // Required
     public static void update (int id1, int id2, int cost) {
-        // TO-DO
         // Use step to send out update
         Node n1 = Utils.getNode(nodeList, id1);
         Node n2 = Utils.getNode(nodeList, id2);
@@ -67,17 +66,15 @@ public class Main {
 
     // Required
     public static void step () {
-        // TO-DO
         // Manually call update.
         for (Node n: nodeList) {
             if (n.getID() == primary.getID()) continue;
-            server.send(Utils.encodeTable(routingTable), n.getAddress(), n.getPort());
+            if (n.getEnabled()) server.send(Utils.encodeTable(routingTable), n.getAddress(), n.getPort());
         }
     }
 
     // Required
     public static void packets () {
-        // TO-DO
         // Print packets and then reset value.
         System.out.println("Recieved this many packets since last call: " + packets);
         packets = 0;
@@ -100,11 +97,8 @@ public class Main {
 
     // Required
     public static void disable (int id) {
-        // TO-DO
         Node n = Utils.getNode(nodeList, id);
         n.stop();
-
-        // Check if it is a neighbor.
     }
 
     // Required
@@ -177,13 +171,11 @@ public class Main {
         }
 
         try {
-            server = new ServerHandler(primary.getPort());
+            server = new ServerHandler(primary.getPort(), interval);
         }
         catch (Exception e) { System.exit(0); }
         
         s = new Scanner(System.in);
-
-        Utils.printMap(Utils.decodeTable(Utils.encodeTable(routingTable)));
 
         String input = "";
 
@@ -191,27 +183,35 @@ public class Main {
             System.out.print("> ");
             input = s.nextLine();
             args = input.split(" ");
-            switch (args[0]) {
-                case "update":
-                    update(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-                    break;
-                case "step":
-                    step();
-                    break;
-                case "packets":
-                    packets();
-                    break;
-                case "display":
-                    display();
-                    break;
-                case "disable":
-                    disable(Integer.parseInt(args[1]));
-                    break;
-                case "crash":
-                    crash();
-                    break;
-                default:
-                    System.err.println("Invalid input.");
+            boolean valid = true;
+            try {
+                switch (args[0]) {
+                    case "update":
+                        update(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                        break;
+                    case "step":
+                        step();
+                        break;
+                    case "packets":
+                        packets();
+                        break;
+                    case "display":
+                        display();
+                        break;
+                    case "disable":
+                        disable(Integer.parseInt(args[1]));
+                        break;
+                    case "crash":
+                        crash();
+                        break;
+                    default:
+                        valid = false;
+                        System.err.println("Invalid input/command.");
+                }
+                if (valid) System.out.println(args[0] + " SUCCESS");
+            }
+            catch (Exception e) {
+                System.out.println(args[0] + " " + e.getMessage());
             }
         }
         

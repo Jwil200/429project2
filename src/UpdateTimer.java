@@ -1,12 +1,8 @@
-import java.util.ArrayList;
-
 public class UpdateTimer extends Thread {
     private boolean running;
-    private ArrayList<Node> nodeList;
     private int time;
 
-    public UpdateTimer (ArrayList<Node> nodeList, int time) {
-        this.nodeList = nodeList;
+    public UpdateTimer (int time) {
         this.time = time;
         running = true;
 
@@ -22,10 +18,11 @@ public class UpdateTimer extends Thread {
                     elapse++;
                 } catch (Exception e) {}
             }
-            for (Node n: nodeList) {
-                // TO-DO
+            if (running) {
+                Main.step();
+                System.out.print("\nPeriodic updates sent.\n> ");
+                elapse = 0;
             }
-            System.out.println("Periodic updates sent.\n>");
         }
     }
 
