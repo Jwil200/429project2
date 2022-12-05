@@ -3,7 +3,6 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.net.Socket;
 
 /**
  * 
@@ -17,9 +16,7 @@ public class Utils {
      */
     public static String ip () {
 		try {
-			//return Inet4Address.getLocalHost().getHostAddress();
-			Socket temp = new Socket("192.168.1.1", 80);
-            		return temp.getLocalAddress().getHostAddress();   
+			return Inet4Address.getLocalHost().getHostAddress();
 		}
 		catch (Exception e) {
 			return "127.0.0.0"; // On a failure to get post local host.
@@ -88,7 +85,6 @@ public class Utils {
             int start = 8 + 12 * i;
             if (routingTable.get(n) == 0) {
                 primary = n;
-                continue;
             }
             appendToArray(message, ipToBytes(n.getAddress()), start, 4);            // IP
             appendToArray(message, intToBytes(n.getPort()), start + 4, 2);          // Port
@@ -97,7 +93,7 @@ public class Utils {
             appendToArray(message, intToBytes(routingTable.get(n)), start + 10, 2); // Cost
             i++;
         }
-        appendToArray(message, intToBytes(routingTable.size() - 1), 0, 2);
+        appendToArray(message, intToBytes(routingTable.size()), 0, 2);
         appendToArray(message, intToBytes(primary.getPort()), 2, 2);
         appendToArray(message, ipToBytes(primary.getAddress()), 4, 4);
         return message;
@@ -114,7 +110,7 @@ public class Utils {
             int nodeID = bytesToInt(Arrays.copyOfRange(message, start + 8, start + 10));
             Node n = Utils.getNode(Main.getNodeList(), nodeID);
             int nodeCost = bytesToInt(Arrays.copyOfRange(message, start + 10, start + 12));
-            table.put(n, nodeCost);
+            table.put(n, (nodeCost == 65535 ? -1 : nodeCost));
         }
         return table;
     }
@@ -151,7 +147,7 @@ public class Utils {
     // For Testing
     public static void printMap (HashMap<Node, Integer> map) {
         for (Node n: map.keySet()) {
-            System.out.println(n.getID() + " " + n.getNext() + " " + map.get(n));
+            System.out.println(n.getID() + " " + (n.getNext() == null ? "-" : n.getNext().getID()) + " " + (map.get(n) == -1 ? "inf" : map.get(n)));
         }
     }
 }

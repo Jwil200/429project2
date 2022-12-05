@@ -23,8 +23,9 @@ public class UpdateTimer extends Thread {
                 } catch (Exception e) {}
             }
             for (Node n: nodeList) {
-                Main.sendMessage(n.getID(), "");
+                // TO-DO
             }
+            System.out.println("Periodic updates sent.\n>");
         }
     }
 

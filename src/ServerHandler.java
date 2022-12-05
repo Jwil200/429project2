@@ -27,7 +27,7 @@ public class ServerHandler extends Thread {
                 InetAddress address = p.getAddress();
                 int port = p.getPort();
                 p = new DatagramPacket(buffer, buffer.length, address, port);
-                System.out.println(address + " " + port);
+                //System.out.println(address + " " + port);
                 System.out.println();
                 String recieved = new String(p.getData(), 0, p.getLength());
 
@@ -39,7 +39,7 @@ public class ServerHandler extends Thread {
 
                 Utils.printMap(map);
 
-                /* 
+                /* This handles updating the table based on the recieved routing table.
                 HashMap<Node, Integer> routingTable = Main.getRoutingTable();
                 Node sourceNode = null;
                 for (Node n: routingTable.keySet()) { // We find the source by finding where it isn't.
@@ -61,10 +61,9 @@ public class ServerHandler extends Thread {
         }
     }
 
-    public void send (String msg, String address, int port) {
-        byte[] buffer = msg.getBytes();
+    public void send (byte[] msg, String address, int port) {
         try {
-            DatagramPacket p = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(address), port);
+            DatagramPacket p = new DatagramPacket(msg, msg.length, InetAddress.getByName(address), port);
             socket.send(p);
         }
         catch (Exception e) { System.out.println("Issue sending message."); }

@@ -13,11 +13,6 @@ public class Main {
     private static HashMap<Node, Integer> routingTable;
     private static int numServers;
 
-    public static void sendMessage (int id, String message) {
-        Node n = Utils.getNode(nodeList, id);
-        server.send(message, n.getAddress(), n.getPort());
-    }
-
     public static ArrayList<Node> getNodeList () {
         return nodeList;
     }
@@ -36,6 +31,10 @@ public class Main {
     public static void step () {
         // TO-DO
         // Manually call update.
+        for (Node n: nodeList) {
+            if (n.getID() == primary.getID()) continue;
+            server.send(Utils.encodeTable(routingTable), n.getAddress(), n.getPort());
+        }
     }
 
     // Required
@@ -115,6 +114,7 @@ public class Main {
             String[] l = s.nextLine().split(" ");
             if (i == 0) { // Check the first edge and set the primary to the first ID in the edge.
                 primary = Utils.getNode(nodeList, Integer.parseInt(l[0]));
+                primary.setNext(primary);
             }
             Node n = Utils.getNode(nodeList, Integer.parseInt(l[1]));
             routingTable.put(n, Integer.parseInt(l[2]));
@@ -142,6 +142,8 @@ public class Main {
         
         s = new Scanner(System.in);
 
+        Utils.printMap(Utils.decodeTable(Utils.encodeTable(routingTable)));
+
         String input = "";
 
         while (!input.equals("crash")) {
@@ -166,9 +168,6 @@ public class Main {
                     break;
                 case "crash":
                     crash();
-                    break;
-                case "send":
-                    sendMessage(Integer.parseInt(args[1]), args[2]);
                     break;
                 default:
                     System.err.println("Invalid input.");
