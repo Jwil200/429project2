@@ -1,1 +1,1 @@
-start cmd /k start cmd /k cd src; javac -d ../bin Main.java; java -cp ../bin Main; cd ../
+start cmd /k start cmd /k cd src; javac -d ../bin distance_vector_routing.java; java -cp ../bin distance_vector_routing; cd ../

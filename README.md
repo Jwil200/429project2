@@ -9,6 +9,6 @@ For more details visit the github at: https://github.com/Jwil200/429project2
 
 ## Running
 To run the project use the launch.bat file (will automatically use an unused topology) or run with the following commands inside of src:
-- javac -d ../bin Main.java
-- java -cp ../bin Main
+- javac -d ../bin distance_vector_routing.java
+- java -cp ../bin distance_vector_routing
 You will then be prompted for a port and interval to run on, after inputting those the program will begin. For the topology file, use the path ../topology/file_name, as the program's initial file path will be in src.
