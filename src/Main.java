@@ -34,8 +34,19 @@ public class Main {
     // Required
     public static void update (int id1, int id2, int cost) {
         // Use step to send out update
+
+        if (cost < -1 || cost == 0) {
+            System.out.println("update INVALID COST, MUST BE -1 OR GREATER THAN 1");
+            return;
+        }
+
         Node n1 = Utils.getNode(nodeList, id1);
         Node n2 = Utils.getNode(nodeList, id2);
+        
+        if (n1 == null || n2 == null) {
+            System.out.println("update INVALID ID");
+            return;
+        }
         
         if (primary.getID() == id1) {
             // Send to id2 only
@@ -62,6 +73,8 @@ public class Main {
             server.send(Utils.encodeTable(f1Route), n1.getAddress(), n1.getPort());
             server.send(Utils.encodeTable(f2Route), n2.getAddress(), n2.getPort());
         }
+
+        System.out.println("UPDATE SUCCESS");
     }
 
     // Required
@@ -71,13 +84,17 @@ public class Main {
             if (n.getID() == primary.getID()) continue;
             if (n.getEnabled()) server.send(Utils.encodeTable(routingTable), n.getAddress(), n.getPort());
         }
+
+        System.out.println("STEP SUCCESS");
     }
 
     // Required
     public static void packets () {
         // Print packets and then reset value.
-        System.out.println("Recieved this many packets since last call: " + packets);
+        System.out.println("PACKETS SINCE LAST CALL: " + packets);
         packets = 0;
+
+        System.out.println("PACKETS SUCCESS");
     }
 
     // Required
@@ -93,12 +110,20 @@ public class Main {
                 System.out.printf("%-12d%-10s%-6s%n", n.getID(), nextID, (routingTable.get(n) == -1 ? "inf" : routingTable.get(n)));
             }
 		}
+
+        System.out.println("DISPLAY SUCCESS");
     }
 
     // Required
     public static void disable (int id) {
         Node n = Utils.getNode(nodeList, id);
+        if (n == null) {
+            System.out.println("disable INVALID ID GIVEN");
+            return;
+        }
         n.stop();
+
+        System.out.println("DISABLE SUCCESS");
     }
 
     // Required
@@ -107,6 +132,8 @@ public class Main {
         for (Node n: nodeList)
             n.stop();
         server.close();
+
+        System.out.println("CRASH SUCCESS");
     }
 
     public static void main (String[] args) {
@@ -183,36 +210,29 @@ public class Main {
             System.out.print("> ");
             input = s.nextLine();
             args = input.split(" ");
-            boolean valid = true;
-            try {
-                switch (args[0]) {
-                    case "update":
-                        update(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-                        break;
-                    case "step":
-                        step();
-                        break;
-                    case "packets":
-                        packets();
-                        break;
-                    case "display":
-                        display();
-                        break;
-                    case "disable":
-                        disable(Integer.parseInt(args[1]));
-                        break;
-                    case "crash":
-                        crash();
-                        break;
-                    default:
-                        valid = false;
-                        System.err.println("Invalid input/command.");
-                }
-                if (valid) System.out.println(args[0] + " SUCCESS");
+            switch (args[0]) {
+                case "update":
+                    update(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+                    break;
+                case "step":
+                    step();
+                    break;
+                case "packets":
+                    packets();
+                    break;
+                case "display":
+                    display();
+                    break;
+                case "disable":
+                    disable(Integer.parseInt(args[1]));
+                    break;
+                case "crash":
+                    crash();
+                    break;
+                default:
+                    System.err.println("Invalid input/command.");
             }
-            catch (Exception e) {
-                System.out.println(args[0] + " " + e.getMessage());
-            }
+            
         }
         
         s.close();

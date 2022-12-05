@@ -103,8 +103,8 @@ public class Utils {
         HashMap<Node, Integer> table = new HashMap<Node, Integer>();
         Main.getNodeList();
         int numNodes = bytesToInt(Arrays.copyOfRange(message, 0, 2));
-        int sourcePort = bytesToInt(Arrays.copyOfRange(message, 0, 2)); // Necessary?
-        String sourceIP = bytesToIP(Arrays.copyOfRange(message, 4, 8));
+        //int sourcePort = bytesToInt(Arrays.copyOfRange(message, 0, 2));
+        //String sourceIP = bytesToIP(Arrays.copyOfRange(message, 4, 8));
         for (int i = 0; i < numNodes; i++) {
             int start = 8 + 12 * i;
             int nodeID = bytesToInt(Arrays.copyOfRange(message, start + 8, start + 10));
