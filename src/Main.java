@@ -13,6 +13,12 @@ public class Main {
     private static HashMap<Node, Integer> routingTable;
     private static int numServers;
 
+    private static int packets;
+
+    public static void incrementPackets () {
+        packets++;
+    }
+
     public static ArrayList<Node> getNodeList () {
         return nodeList;
     }
@@ -21,10 +27,42 @@ public class Main {
         return routingTable;
     }
 
+    public static Node getPrimary () {
+        return primary;
+    }
+
     // Required
     public static void update (int id1, int id2, int cost) {
         // TO-DO
         // Use step to send out update
+        Node n1 = Utils.getNode(nodeList, id1);
+        Node n2 = Utils.getNode(nodeList, id2);
+        
+        if (primary.getID() == id1) {
+            // Send to id2 only
+            routingTable.put(n2, cost);
+            server.send(Utils.encodeTable(routingTable), n2.getAddress(), n2.getPort());
+        }
+        else if (primary.getID() == id2) {
+            routingTable.put(n1, cost);
+            server.send(Utils.encodeTable(routingTable), n1.getAddress(), n1.getPort());
+        }
+        else {
+            // Both are different
+            // We setup fake routing tables to update just one connection.
+            HashMap<Node, Integer> f1Route = new HashMap<Node, Integer>();
+            HashMap<Node, Integer> f2Route = new HashMap<Node, Integer>();
+            Node tempNode1 = new Node(id1, n1.getAddress(), n1.getPort());
+            tempNode1.setNext(tempNode1);
+            Node tempNode2 = new Node(id2, n2.getAddress(), n2.getPort());
+            tempNode2.setNext(tempNode2);
+            f1Route.put(tempNode1, cost);
+            f1Route.put(tempNode2, 0);
+            f2Route.put(tempNode2, cost);
+            f2Route.put(tempNode1, 0);
+            server.send(Utils.encodeTable(f1Route), n1.getAddress(), n1.getPort());
+            server.send(Utils.encodeTable(f2Route), n2.getAddress(), n2.getPort());
+        }
     }
 
     // Required
@@ -41,6 +79,8 @@ public class Main {
     public static void packets () {
         // TO-DO
         // Print packets and then reset value.
+        System.out.println("Recieved this many packets since last call: " + packets);
+        packets = 0;
     }
 
     // Required
@@ -76,6 +116,7 @@ public class Main {
     }
 
     public static void main (String[] args) {
+        packets = 0;
         String fileName = "../topology/";
         int interval = 1000;
         Utils.ArgsData a = null;

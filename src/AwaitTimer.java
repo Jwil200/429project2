@@ -22,6 +22,7 @@ public class AwaitTimer extends Thread {
         if (running) {
             c.stop();
             //c.setCost(-1); Should set cost to -1 (inf) here
+            Main.getRoutingTable().put(c, -1);
         }
     }
 

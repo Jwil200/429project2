@@ -19,6 +19,7 @@ public class Node {
         this.next = next;
 
         running = false;
+        enabled = true;
     }
 
     public int getID () {
@@ -43,11 +44,16 @@ public class Node {
 
     public String toString () {
         return "ID: " + id + " IP: " + address + " PORT: " + port;
-    }  
+    }
+
+    public boolean getEnabled () {
+        return enabled;
+    }
 
     // Update Manager
 
     public void stop () {
+        enabled = false;
         running = false;
     }
 
